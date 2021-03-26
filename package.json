@@ -15,8 +15,9 @@
     "url": "https://github.com/cherrysings96/database-conv/issues"
   },
   "homepage": "https://github.com/cherrysings96/database-conv#readme",
-  "description": "",
   "dependencies": {
     "express": "^4.17.1"
-  }
+  },
+  "devDependencies": {},
+  "description": ""
 }
