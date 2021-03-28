@@ -1,0 +1,25 @@
+{
+  "name": "Sherene",
+  "version": "1.0.0",
+  "main": "indexSherene.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cherrysings96/database-conv.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cherrysings96/database-conv/issues"
+  },
+  "homepage": "https://github.com/cherrysings96/database-conv#readme",
+  "dependencies": {
+    "@material-ui/core": "^4.11.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "pg": "^8.5.1"
+  },
+  "description": ""
+}
