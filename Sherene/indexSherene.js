@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port= 5001
+const port= 5000
 const cors = require("cors");
 const pool = require("./dbSherene");
 
@@ -42,7 +42,7 @@ app.get("/todos", async (req, res) => {
 app.get("/todos/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const todo = await pool.query("SELECT * FROM todo WHERE todo_id = $1", [
+    const todo = await pool.query("SELECT * FROM todo WHERE todo_id =   ", [
       id,
     ]);
     res.json(todo.rows[0]);
