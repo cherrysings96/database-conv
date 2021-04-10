@@ -4,20 +4,20 @@ const cors = require("cors");
 const pool = require("./dblogin");
 const app = express();
 
-const session = require("express-session");
+//const session = require("express-session");
 
 //middleware
 
 loginapp.use(express.json());
 loginapp.use(cors());
 
-app.use(
-  session({
-    secret: "cokkie collect server",
-    resave: false,
-    saveUninitialized: false,
-  })
-);
+// app.use(
+//   session({
+//     secret: "cokkie collect server",
+//     resave: false,
+//     saveUninitialized: false,
+//   })
+// );
 
 //Routes
 
@@ -139,7 +139,7 @@ loginapp.delete("/todos/:id", async (req, res) => {
     }
   });
 
-  loginapp.get("/merchandise", async (req, res) => {
+  loginapp.get("/merchandiseentry", async (req, res) => {
     try {
       const allMerch = await pool.query("SELECT * FROM merchdata");
       res.json(allMerch.rows);
