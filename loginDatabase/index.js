@@ -56,7 +56,7 @@ loginapp.post("/todos", async (req, res) => {
   try {
     const { description } = req.body;
     const newTodo = await pool.query(
-      "INSERT INTO todo (description) VALUES($1) RETURNING *",
+      "INSERT INTO todo(description) VALUES($1) RETURNING *",
       [description]
     );
 
@@ -104,6 +104,7 @@ loginapp.put("/todos/:id", async (req, res) => {
     );
 
     res.json("Todo was updated!");
+    res.json(updateTodo.rows[0]);
   } catch (err) {
     console.error(err.message);
   }
@@ -141,10 +142,10 @@ try{
     [id,fullname,email,password]
   );
 
-  console.log(id,fullname,email,password);
-  console.log(newuser);
+  // console.log(id,fullname,email,password);
+  // console.log(newuser);
 
-  // res.json(newuser.rows[0]);
+  res.json(newuser.rows[0]);
 }catch(err){
   console.error(err.message);
 }
