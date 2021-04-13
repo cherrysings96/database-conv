@@ -164,7 +164,7 @@ loginapp.post("/userdataentry", async (req, res) => {
     console.log(id, fullname, email, password);
     console.log(newuser);
 
-    // res.json(newuser.rows[0]);
+    res.json(newuser.rows[0]);
   } catch (err) {
     console.error(err.message);
   }
