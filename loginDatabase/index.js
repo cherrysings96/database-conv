@@ -13,7 +13,7 @@ loginapp.use(express.json());
 loginapp.use(
   cors({
     origin: ["http://localhost:3000"],
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST","DELETE","PUT"],
     credentials: true,
   })
 );
@@ -72,7 +72,7 @@ loginapp.get("/logoutcheck", (req, res) => {
   res.json({ auth: false });
 });
 
-loginapp.post("/todos", async (req, res) => {
+loginapp.post("/todos/insert", async (req, res) => {
   try {
     const { description } = req.body;
     const newTodo = await pool.query(
