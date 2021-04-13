@@ -2,20 +2,34 @@ const express = require("express");
 const loginapp = express();
 const cors = require("cors");
 const pool = require("./dblogin");
-const app = express();
 
 const session = require("express-session");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 
 //middleware
 
 loginapp.use(express.json());
-loginapp.use(cors());
+loginapp.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    methods: ["GET", "POST","DELETE","PUT"],
+    credentials: true,
+  })
+);
 
-app.use(
+loginapp.use(cookieParser());
+loginapp.use(bodyParser.urlencoded({ extended: true }));
+
+loginapp.use(
   session({
+    key: "userId",
     secret: "cokkie collect server",
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      expires: 60 * 60 * 60,
+    },
   })
 );
 
@@ -28,12 +42,12 @@ loginapp.post("/login", async (req, res) => {
       `SELECT * FROM userdata WHERE userdata.email=$1`,
       [inputemail]
     );
-
-    console.log(loginUser);
-    console.log(inputpassword);
-    console.log(loginUser.rows[0].password);
     if (inputpassword === loginUser.rows[0].password) {
       console.log("Hello");
+
+      req.session.user = { auth: true };
+      console.log(req.session.user);
+
       res.json({ auth: true });
     } else {
       console.log("world");
@@ -44,15 +58,21 @@ loginapp.post("/login", async (req, res) => {
   }
 });
 
-// app.get("/", (req, res) => {
-//   // req.session.isAuth = true;
-//   console.log(req.session);
-//   res.send("Hello Session login");
-// });
+loginapp.get("/logcheck", (req, res) => {
+  console.log(req.session);
+  if (req.session.user) {
+    console.log("inside logcheck");
+    res.json({ auth: true });
+  }else{
+    res.json({auth: false});
+  }
+});
+loginapp.get("/logoutcheck", (req, res) => {
+  req.session.user = { auth: false };
+  res.json({ auth: false });
+});
 
-
-
-loginapp.post("/todos", async (req, res) => {
+loginapp.post("/todos/insert", async (req, res) => {
   try {
     const { description } = req.body;
     const newTodo = await pool.query(
@@ -83,7 +103,7 @@ loginapp.get("/todos/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const todo = await pool.query("SELECT * FROM todo WHERE todo_id = $1", [
-      id
+      id,
     ]);
 
     res.json(todo.rows[0]);
@@ -115,14 +135,13 @@ loginapp.delete("/todos/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const deleteTodo = await pool.query("DELETE FROM todo WHERE todo_id = $1", [
-      id
+      id,
     ]);
     res.json("Todo was deleted!");
   } catch (err) {
     console.log(err.message);
   }
 });
-
 
 loginapp.get("/userdata", async (req, res) => {
   try {
@@ -133,39 +152,35 @@ loginapp.get("/userdata", async (req, res) => {
   }
 });
 
-loginapp.post("/userdataentry", async (req, res)=>{
-try{
-  const {id,fullname,email,password} = req.body;
-  const newuser = await pool.query(
-    "INSERT into userdata(id,fullname,email,password) VALUES ($1,$2,$3,$4) RETURNING *",
-    [id,fullname,email,password]
-  );
+loginapp.post("/userdataentry", async (req, res) => {
+  try {
+    const { id, fullname, email, password } = req.body;
+    const newuser = await pool.query(
+      "INSERT into userdata(id,fullname,email,password) VALUES ($1,$2,$3,$4) RETURNING *",
+      [id, fullname, email, password]
+    );
 
-  console.log(id,fullname,email,password);
-  console.log(newuser);
+    console.log(id, fullname, email, password);
+    console.log(newuser);
 
-  // res.json(newuser.rows[0]);
-}catch(err){
-  console.error(err.message);
-}
+    // res.json(newuser.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+  }
 });
 
 loginapp.delete("/userdelete/:id", async (req, res) => {
-try {
-  const { id } = req.params;
-  const deleteTodo = await pool.query("DELETE FROM userdata WHERE id = $1", [
-    id,
-  ]);
-  res.json("User was deleted!");
-} catch (err) {
-  console.log("cannot delete");
-  console.log(err.message);
-}
+  try {
+    const { id } = req.params;
+    const deleteTodo = await pool.query("DELETE FROM userdata WHERE id = $1", [
+      id,
+    ]);
+    res.json("User was deleted!");
+  } catch (err) {
+    console.log("cannot delete");
+    console.log(err.message);
+  }
 });
-
-
-
-
 
 loginapp.listen(5000, () => {
   console.log("server is running at port http://localhost:5000");
