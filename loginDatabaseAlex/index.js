@@ -164,10 +164,10 @@ loginapp.delete("/todos/:id", async (req, res) => {
   loginapp.put("/merchandise/:id", async (req, res) => {
     try {
       const { id } = req.params;
-      const { description } = req.body;
+      const { merchName } = req.body;
       const updateMerchname = await pool.query(
-        "UPDATE merchdata SET description = $1 WHERE ID = $2",
-        [description, id]
+        "UPDATE merchdata SET merchName = $1 WHERE ID = $2",
+        [merchName, id]
       );
   
       res.json("Merchandise Data was updated!");
