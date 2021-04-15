@@ -18,3 +18,10 @@ CREATE TABLE userdata(
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL
 );
+ -- //Jasim table
+CREATE TABLE merchdata (
+  id INTEGER PRIMARY KEY,
+  merchname VARCHAR(255) NOT NULL
+  );
+
+INSERT INTO merchdata ( id,merchName) VALUES (1,'t-shirt');
