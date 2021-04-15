@@ -69,7 +69,15 @@ loginapp.get("/logcheck", (req, res) => {
 });
 loginapp.get("/logoutcheck", (req, res) => {
   req.session.user = { auth: false };
-  res.json({ auth: false });
+  console.log(req.session.user.auth);
+  // res.json({ auth: false });
+  req.session.destroy(err => {
+    if({auth:false}){
+      console.log("logged out")
+        return res.json({ auth: false });
+    }
+    res.clearCookie("userId");
+})
 });
 
 loginapp.post("/todos/insert", async (req, res) => {
