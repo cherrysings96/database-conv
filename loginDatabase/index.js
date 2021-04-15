@@ -153,6 +153,70 @@ loginapp.get("/userdata", async (req, res) => {
   }
 });
 
+  loginapp.post("/merchandise", async (req, res) => {
+    try {
+      const { merchName } = req.body;
+      const newMerchname = await pool.query(
+        "INSERT INTO merchdata (merchName) VALUES($1) RETURNING *",
+        [merchName]
+      );
+      console.log('hello');
+      console.log(newMerchname);
+      res.json(merchName.rows[0]);
+    } catch (err) {
+      console.error(err.message);
+    }
+  });
+
+  loginapp.get("/merchandiseentry", async (req, res) => {
+    try {
+      const allMerch = await pool.query("SELECT * FROM merchdata");
+      res.json(allMerch.rows);
+    } catch (err) {
+      console.error(err.message);
+    }
+  });
+
+  loginapp.get("/merchandise/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const merchName = await pool.query("SELECT * FROM merchdata WHERE ID = $1", [
+        id
+      ]);
+  
+      res.json(merchName.rows[0]);
+    } catch (err) {
+      console.error(err.message);
+    }
+  });
+
+  loginapp.put("/merchandise/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { merchName } = req.body;
+      const updateMerchname = await pool.query(
+        "UPDATE merchdata SET merchName = $1 WHERE ID = $2",
+        [merchName, id]
+      );
+  
+      res.json("Merchandise Data was updated!");
+    } catch (err) {
+      console.error(err.message);
+    }
+  });
+  
+  loginapp.delete("/merchandise/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const deleteMerchname = await pool.query("DELETE FROM merchdata WHERE ID = $1", [
+        id
+      ]);
+      res.json("The merchandise data you selected was deleted!");
+    } catch (err) {
+      console.log(err.message);
+    }
+  });
+  
 loginapp.post("/userdataentry", async (req, res) => {
   try {
     const { id, fullname, email, password } = req.body;
